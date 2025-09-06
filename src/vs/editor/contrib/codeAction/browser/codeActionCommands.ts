@@ -14,6 +14,7 @@ import { autoFixCommandId, codeActionCommandId, fixAllCommandId, organizeImports
 import * as nls from '../../../../nls.js';
 import { ContextKeyExpr } from '../../../../platform/contextkey/common/contextkey.js';
 import { KeybindingWeight } from '../../../../platform/keybinding/common/keybindingsRegistry.js';
+import { MenuId } from '../../../../platform/actions/common/actions.js';
 import { CodeActionAutoApply, CodeActionCommandArgs, CodeActionFilter, CodeActionKind, CodeActionTriggerSource } from '../common/types.js';
 import { CodeActionController } from './codeActionController.js';
 import { SUPPORTED_CODE_ACTIONS } from './codeActionModel.js';
@@ -70,11 +71,17 @@ export class QuickFixAction extends EditorAction {
 		super({
 			id: quickFixCommandId,
 			label: nls.localize2('quickfix.trigger.label', "Quick Fix..."),
-			precondition: ContextKeyExpr.and(EditorContextKeys.writable, EditorContextKeys.hasCodeActionsProvider),
+			precondition: undefined,
 			kbOpts: {
-				kbExpr: EditorContextKeys.textInputFocus,
+				kbExpr: ContextKeyExpr.and(EditorContextKeys.textInputFocus, EditorContextKeys.writable, EditorContextKeys.hasCodeActionsProvider),
 				primary: KeyMod.CtrlCmd | KeyCode.Period,
 				weight: KeybindingWeight.EditorContrib
+			},
+			menuOpts: {
+				menuId: MenuId.MenubarEditMenu,
+				group: '6_codeaction',
+				title: nls.localize({ key: 'miShowCodeActions', comment: ['&& denotes a mnemonic'] }, "&&Show Code Actions..."),
+				order: 1
 			}
 		});
 	}

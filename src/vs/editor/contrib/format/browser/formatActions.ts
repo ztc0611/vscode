@@ -27,6 +27,7 @@ import { ContextKeyExpr } from '../../../../platform/contextkey/common/contextke
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
 import { KeybindingWeight } from '../../../../platform/keybinding/common/keybindingsRegistry.js';
 import { IEditorProgressService, Progress } from '../../../../platform/progress/common/progress.js';
+import { MenuId } from '../../../../platform/actions/common/actions.js';
 
 export class FormatOnType implements IEditorContribution {
 
@@ -215,9 +216,9 @@ class FormatDocumentAction extends EditorAction {
 		super({
 			id: 'editor.action.formatDocument',
 			label: nls.localize2('formatDocument.label', "Format Document"),
-			precondition: ContextKeyExpr.and(EditorContextKeys.notInCompositeEditor, EditorContextKeys.writable, EditorContextKeys.hasDocumentFormattingProvider),
+			precondition: undefined,
 			kbOpts: {
-				kbExpr: EditorContextKeys.editorTextFocus,
+				kbExpr: ContextKeyExpr.and(EditorContextKeys.editorTextFocus, EditorContextKeys.notInCompositeEditor, EditorContextKeys.writable, EditorContextKeys.hasDocumentFormattingProvider),
 				primary: KeyMod.Shift | KeyMod.Alt | KeyCode.KeyF,
 				linux: { primary: KeyMod.CtrlCmd | KeyMod.Shift | KeyCode.KeyI },
 				weight: KeybindingWeight.EditorContrib
@@ -225,6 +226,12 @@ class FormatDocumentAction extends EditorAction {
 			contextMenuOpts: {
 				group: '1_modification',
 				order: 1.3
+			},
+			menuOpts: {
+				menuId: MenuId.MenubarEditMenu,
+				group: '7_format',
+				title: nls.localize({ key: 'miFormatDocument', comment: ['&& denotes a mnemonic'] }, "&&Format Document"),
+				order: 1
 			}
 		});
 	}
